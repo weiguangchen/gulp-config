@@ -1,6 +1,6 @@
 ## Gulp基本配置
 
 ### 安装依赖
-    > npm i
+   > npm i
 ### 开发
-    > gulp
+   > gulp
