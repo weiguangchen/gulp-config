@@ -4,7 +4,6 @@ const postcss = require('gulp-postcss'); /* postcss */
 const autoprefixer = require('autoprefixer'); /* 自动添加前缀 */
 const px2rem = require('postcss-px2rem'); /* px转rem */
 const cssmin = require('gulp-cssmin'); /* 压缩css */
-
 const babel = require('gulp-babel'); /* babel转es6 */
 const jsmin = require('gulp-uglify'); /* 压缩js */
 const rename = require('gulp-rename'); /* 重命名 */
@@ -12,8 +11,8 @@ const bs = require('browser-sync').create(); /* 热更新 */
 const reload = bs.reload;
 const fileinclude = require('gulp-file-include'); /* 合并html */
 const clean = require('gulp-clean'); /* 清理文件插件 */
-const plumber = require('gulp-plumber');/* 防止编译出错跳出watch */
-const watch = require('gulp-watch');/* 监听新建文件 */
+const plumber = require('gulp-plumber'); /* 防止编译出错跳出watch */
+const watch = require('gulp-watch'); /* 监听新建文件 */
 
 const assetRev = require('gulp-asset-rev');
 const rev = require('gulp-rev');
@@ -23,7 +22,7 @@ const path = require('path');
 /* 开发地址 */
 const es = './src/assets/js/**/*.js';
 const scss = './src/assets/scss/**/*.scss';
-const html = './src/*.html';
+const html = './src/**/*.html';
 const static = './src/static/**/*';
 /* 打包地址 */
 const css = './dist/assets/css';
@@ -40,10 +39,10 @@ gulp.task('serve', ['build'], function () {
     })
     gulp.watch(scss, ['postcss']);
     gulp.watch(es, ['es6']);
-    watch(html,()=>{
-        gulp.start('fileinclude')
-    })
-    // gulp.watch(html, ['fileinclude'])
+    // watch(html, () => {
+    //     gulp.start('fileinclude')
+    // })
+    gulp.watch(html, ['fileinclude'])
     gulp.watch(html).on('change', reload);
 })
 
@@ -124,7 +123,6 @@ gulp.task('revCss', function () {
         .pipe(rev.manifest())
         .pipe(gulp.dest('./rev/css'));
 });
-
 //js生成文件hash编码并生成 rev-manifest.json文件名对照映射
 gulp.task('revJs', function () {
     return gulp.src('./build/js/*.js')
@@ -132,7 +130,6 @@ gulp.task('revJs', function () {
         .pipe(rev.manifest())
         .pipe(gulp.dest('./rev/js'));
 });
-
 //Html替换css、js文件版本
 gulp.task('revHtml', function () {
     return gulp.src(['./rev/**/*.json', html])
